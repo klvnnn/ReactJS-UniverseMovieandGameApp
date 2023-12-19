@@ -1,22 +1,15 @@
-import React, {useState} from "react";
-import Navbar from "./Components/Navbar";
-import Footer from "./Components/Footer";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import Home from "./Pages/home";
+import About from "./Pages/about";
 
 function App() {
-  // Props
-  const footerText = "Customise Your Product Now"
-  // State
-  const [getNavbar, SetNavbar] = useState("");
-  const changeNavbar = () => {
-    SetNavbar("Contact");
-  };
-
   return (
-    <>
-    <Navbar navbarValue={getNavbar}/>
-    <button onClick={changeNavbar}>Click</button>
-    <Footer footerText={footerText}/>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/about" element={<About/>}/>
+      </Routes>
+    </Router>
   );
 }
 
