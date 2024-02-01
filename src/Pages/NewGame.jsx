@@ -1,49 +1,34 @@
-import Footer from "../Components/Footer";
-import {getMovieList, searchMovie} from "../services/api.jsx";
 import { useEffect, useState } from "react";
+import Footer from "../Components/Footer";
+import GenreList from "../Components/GenreList";
+import GameApi from "../services/GameApi";
+import GamesByGenresId from "../Components/GamesByGenresId";
 
-function Home() {
+function NewGame() {
     const footerText = "See Other Movies";
-    const imgUrl = import.meta.env.VITE_BASE_IMGURL;
-    const [popularMovies, setPopularMovies] = useState([]);
+    const [allGameList,setAllGameList]=useState();
+    const [gameListByGenres,setGameListByGenres]=useState([]);
+    const [selctedGenresName,setSelctedGenresName]=useState('Action');
+    
+    useEffect(()=>{
+    getAllGamesList();
+    getGameListByGenresId(4);
+    },[])
 
-    useEffect(() => {
-        getMovieList().then((result) => {
-            setPopularMovies(result)
-        })
-    }, []);
-
-    function PopularMoviesList (){
-            return popularMovies.map((movie, i) => {
-                return (
-                <div className="pt-5 w-36 sm:w-48 md:w-64" key={i}>
-                    <div className="group relative block bg-black">
-                        <img alt="Developer" src={`${imgUrl}/${movie.poster_path}`}
-                            className="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50" />
-                        <div className="relative p-4 sm:p-6 lg:p-8">
-                            <p className="text-sm font-medium uppercase tracking-widest text-yellow-400">{movie.vote_average}</p>
-                            <p className="text-xl font-bold text-white sm:text-2xl h-20">{movie.title}</p>
-                            <div className="mt-32 sm:mt-48 lg:mt-64">
-                                <div
-                                    className="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
-                                    <p className="text-sm text-white">{movie.release_date}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                )
-            }
-        )
+    const getAllGamesList=()=>{
+    GameApi.getAllGames.then((resp)=>{
+        setAllGameList(resp.data.results)
+        
+    })
     }
 
-    const search = async(q) => {
-        if (q.length > 3){
-            const query = await searchMovie(q)
-            setPopularMovies(query.results)
-        }
-    }
+    const getGameListByGenresId=(id)=>{
 
+    GameApi.getGameListByGenreId(id).then((resp)=>{
+    
+        setGameListByGenres(resp.data.results)
+    })
+    }
 return (
 <>
     <header className="bg-gray-100">
@@ -116,14 +101,15 @@ return (
 
             <div className="mt-8 w-max">
                 <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Welcome To <p
-                        className=" animate-typing overflow-hidden whitespace-nowrap border-r-4">Universe Movie!</p>
+                        className=" animate-typing overflow-hidden whitespace-nowrap border-r-4">Universe Game!</p>
                 </h1>
 
                 <p className="mt-1.5 text-sm text-gray-500">
-                    Top 1 Movie list Website! 🚀
+                    Top 1 Game list Website! 🚀
                 </p>
+
             </div>
-            <br />
+                        <br />
             <nav aria-label="Breadcrumb">
             <ol className="flex items-center gap-1 text-sm text-gray-600">
                 <li>
@@ -188,15 +174,26 @@ return (
             </nav>
         </div>
     </header>
-    <div className="flex flex-wrap justify-center items-center gap-10">
-        {/* Movie Card */}
-        <PopularMoviesList />
-        {/* End Movie Card */}
-    </div>
     <br />
+    <div className="grid grid-cols-4 px-5 mb-5">
+        <div className="hidden md:block me-2">
+            <GenreList 
+            genereId={(genereId)=>getGameListByGenresId(genereId)}
+            selectedGenresName={(name)=>setSelctedGenresName(name)}
+            />
+        </div>
+        <div className="col-span-4 md:col-span-3">
+            {allGameList?.length>0&&gameListByGenres.length>0?
+            <div>
+            <GamesByGenresId gameList={gameListByGenres} 
+            selctedGenresName={selctedGenresName} />
+            </div>
+            :null}
+        </div>
+    </div>
     <Footer footerText={footerText} />
 </>
 );
 }
 
-export default Home;
+export default NewGame;
