@@ -8,6 +8,11 @@ const axiosCreate=axios.create({
 const getGenreList=axiosCreate.get('/genres?key='+key);
 const getAllGames=axiosCreate.get('/games?key='+key);
 const getGameListByGenreId=(id)=>axiosCreate.get('/games?key='+key+'&genres='+id)
+// export const searchGame = async(g) => {
+//     const searchId = await axios.get('/games?key='+key+'&search=${g}')
+//     return searchId
+// }
+
 export default{
     getGenreList,
     getAllGames,

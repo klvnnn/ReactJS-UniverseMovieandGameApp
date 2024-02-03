@@ -3,6 +3,7 @@ import Footer from "../Components/Footer";
 import GenreList from "../Components/GenreList";
 import GameApi from "../services/GameApi";
 import GamesByGenresId from "../Components/GamesByGenresId";
+// import { searchGame } from "../services/GameApi";
 
 function NewGame() {
     const footerText = "See Other Movies";
@@ -11,24 +12,33 @@ function NewGame() {
     const [selctedGenresName,setSelctedGenresName]=useState('Action');
     
     useEffect(()=>{
-    getAllGamesList();
-    getGameListByGenresId(4);
+        getAllGamesList();
+        getGameListByGenresId(4);
+        // getGameListByGenresId(4).then((resp) => {
+        //     setGameListByGenres(resp.data.results)
+        // })
     },[])
 
     const getAllGamesList=()=>{
-    GameApi.getAllGames.then((resp)=>{
-        setAllGameList(resp.data.results)
-        
-    })
+        GameApi.getAllGames.then((resp)=>{
+            setAllGameList(resp.data.results)
+            
+        })
     }
 
     const getGameListByGenresId=(id)=>{
-
-    GameApi.getGameListByGenreId(id).then((resp)=>{
-    
-        setGameListByGenres(resp.data.results)
-    })
+        GameApi.getGameListByGenreId(id).then((resp)=>{
+            setGameListByGenres(resp.data.results)
+        })
     }
+
+    // const searchId = async(g) => {
+    //     if (g.length > 3){
+    //         const query = await searchGame(g)
+    //         setGameListByGenres(query.resp.data.results)
+    //     }
+    // }
+
 return (
 <>
     <header className="bg-gray-100">
@@ -39,7 +49,7 @@ return (
 
                     <input className="h-10 w-full rounded-lg border-none bg-white pe-10 ps-4 text-sm shadow-sm sm:w-56"
                         id="search" type="search" placeholder="Search website..." onChange={({target})=>
-                    search(target.value)}
+                    searchId(target.value)}
                     />
 
                     <button type="button"
